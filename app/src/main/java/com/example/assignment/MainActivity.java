@@ -19,6 +19,8 @@ public class MainActivity extends AppCompatActivity {
 
     private TextView sensor_txt_view;
 
+    private SensorService nService;
+    private boolean bound = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,13 +55,10 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private SensorService nService;
-    private boolean bound = false;
-
     private ServiceConnection connection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-            SensorService.NotificationBinder binder = (SensorService.NotificationBinder) iBinder;
+            SensorService.SensorBinder binder = (SensorService.SensorBinder) iBinder;
             nService = binder.getService();
             bound = true;
         }

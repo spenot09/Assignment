@@ -39,8 +39,9 @@ public class SensorService extends Service implements SensorEventListener {
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
         Toast.makeText(this, "Service Ended", Toast.LENGTH_SHORT).show();
+        sensorManager.unregisterListener(this);
+        super.onDestroy();
     }
 
             //      Sensor      //
@@ -49,8 +50,6 @@ public class SensorService extends Service implements SensorEventListener {
     public void onSensorChanged(SensorEvent event) {
         // grab the values and timestamp -- off the main thread
         new SensorEventTask().execute(event);
-        // stop the service
-        stopSelf();
     }
 
     @Override
@@ -58,6 +57,10 @@ public class SensorService extends Service implements SensorEventListener {
     }
 
             //      Async Task      //
+    //Writing data to disk is a blocking operation and should be performed on a
+    // background thread. A simple way of doing this is through an AsyncTask.
+    // Within the Service, we can add an AsyncTask and pass it the SensorEvent
+    // for handling
 
     static class SensorEventTask extends AsyncTask<SensorEvent,Float, Float> {
 
@@ -74,13 +77,11 @@ public class SensorService extends Service implements SensorEventListener {
         }
     }
 
-    private final IBinder binder = new NotificationBinder();
+    private final IBinder binder = new SensorBinder();
 
-    class NotificationBinder extends Binder {
+    class SensorBinder extends Binder {
         SensorService getService() {
             return SensorService.this;
         }
     }
-
-
 }
