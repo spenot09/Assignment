@@ -1,6 +1,7 @@
 package com.example.assignment;
 
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -8,33 +9,91 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.AsyncTask;
 import android.os.Binder;
+import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Message;
+import android.os.Messenger;
+import android.os.RemoteException;
 import android.util.Log;
 import android.widget.Toast;
+
+import java.util.ArrayList;
+
+import static android.hardware.Sensor.TYPE_ACCELEROMETER;
+import static android.hardware.Sensor.TYPE_LIGHT;
 
 public class SensorService extends Service implements SensorEventListener {
 
     private static final String TAG = "SensorService";
 
+    private int sensor_type = TYPE_ACCELEROMETER;
+    static final int MSG_ACCELEROMETER = 1;
+    static final int MSG_LIGHT = 2;
+    static final int MSG_SENSOR = 0;
+    static final int MSG_REGISTER_CLIENT = 3;
+
+
     private Sensor sensor;
     private SensorManager sensorManager;
 
-            //      Service Functions       //
+    Messenger mClient; // Keeps track of all current registered clients.
+
+
+    final Messenger mMessenger = new Messenger(new IncomingHandler()); // Target we publish for clients to send messages to IncomingHandler.
+
+
+    //      Service Functions       //
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Toast.makeText(this, "Service Started", Toast.LENGTH_SHORT).show();
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-        sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        sensor = sensorManager.getDefaultSensor(TYPE_LIGHT);
         sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL);
 
         return START_STICKY;
     }
 
+    class IncomingHandler extends Handler { // Handler of incoming messages from clients.
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case MSG_REGISTER_CLIENT:
+                    mClient=(msg.replyTo);
+                    break;
+                case MSG_SENSOR:
+                    if (msg.arg1==MSG_ACCELEROMETER) {
+                        sensor_type = msg.arg1;
+                        Log.e(TAG, "Accelerometer sensor activated: " + sensor_type);
+                    }
+                    if (msg.arg1==MSG_LIGHT) {
+                        sensor_type = msg.arg1;
+                        Log.e(TAG, "Light sensor activated: " + sensor_type);
+                    }
+                    break;
+                default:
+                    super.handleMessage(msg);
+            }
+        }
+    }
+
+    private void sendMessageToUI(int sensor_val) {
+            try {
+                // Send data as an int, this will need to be a float but just testing atm with a static value passed as a parameter
+                mClient.send(Message.obtain(null, MSG_SENSOR, sensor_val));
+            }
+            catch (RemoteException e) {
+                // The client is dead. Remove it from the list; we are going through the list from back to front so this is safe to do inside the loop.
+                Log.i(TAG, "Client is disconnected");
+            }
+
+    }
+
     @Override
     public IBinder onBind(Intent intent) {
-        Toast.makeText(this, "Service Binded", Toast.LENGTH_SHORT).show();
-        return binder;
+        Toast.makeText(this, "Service Bound", Toast.LENGTH_SHORT).show();
+        return mMessenger.getBinder();
     }
 
     @Override
@@ -62,7 +121,7 @@ public class SensorService extends Service implements SensorEventListener {
     // Within the Service, we can add an AsyncTask and pass it the SensorEvent
     // for handling
 
-    static class SensorEventTask extends AsyncTask<SensorEvent,Float, Float> {
+    static class SensorEventTask extends AsyncTask<SensorEvent,Float,Float> {
 
         @Override
         protected void onProgressUpdate(Float... progress) {
@@ -72,7 +131,6 @@ public class SensorService extends Service implements SensorEventListener {
         @Override
         protected Float doInBackground(SensorEvent... events) {
             publishProgress(events[0].values[0]);
-
             return null;
         }
     }
