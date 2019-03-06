@@ -13,89 +13,75 @@ import android.os.RemoteException;
 import android.se.omapi.Session;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity {
+public class RequesterActivity extends AppCompatActivity {
 
-    private Button start_service_button, stop_service_button,bind_service_button, acc_button, light_button;
+    private Button  acc_button, light_button, unbind_button;
     private TextView sensor_txt_view, textStatus;
 
     Messenger mService = null;
     final Messenger mMessenger = new Messenger(new IncomingHandler());
 
-    private SensorService nService;
     private boolean bound = false;
 
     static final int MSG_ACCELEROMETER = 1;
     static final int MSG_LIGHT = 2;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_requester);
 
-        start_service_button = findViewById(R.id.start_service_button);
-        stop_service_button = findViewById(R.id.stop_service_button);
-        bind_service_button = findViewById(R.id.bind_service_button);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         acc_button = findViewById(R.id.acc_sensor_button);
         light_button = findViewById(R.id.light_sensor_button);
-
-
+        unbind_button = findViewById(R.id.unbind_button);
 
         sensor_txt_view = findViewById(R.id.sensor_txt_view);
         textStatus = findViewById(R.id.textStatus);
 
-        start_service_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startService(new Intent(getBaseContext(), SensorService.class));
-            }
-        });
-
-        stop_service_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                doUnbindService();
-                stopService(new Intent(getBaseContext(), SensorService.class));
-            }
-        });
-
-        bind_service_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                doBindService();
-            }
-        });
-
         acc_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                doBindService();
                 sendMessageToService(MSG_ACCELEROMETER);
             }
         });
         light_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                doBindService();
                 sendMessageToService(MSG_LIGHT);
             }
         });
 
+        unbind_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                doUnbindService();
+            }
+        });
     }
 
     class IncomingHandler extends Handler {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
-                case SensorService.MSG_ACCELEROMETER:
-                    sensor_txt_view.setText("Accelerometer locked in: " + msg.arg1);
+                case SensorService.MSG_SENSOR:
+                    sensor_txt_view.setText("Accelerometer locked in: " + msg.obj);
                     break;
-                case SensorService.MSG_LIGHT:
-                    sensor_txt_view.setText("Light Sensor locked in: " + msg.arg1);
-                    break;
+                /**
+                 case SensorService.MSG_LIGHT:
+                 sensor_txt_view.setText("Light Sensor locked in: " + msg.arg1);
+                 break;
+                 **/
                 default:
                     super.handleMessage(msg);
             }
@@ -123,7 +109,6 @@ public class MainActivity extends AppCompatActivity {
             textStatus.setText("Disconnected.");
             bound = false;
         }
-
     };
 
     private void sendMessageToService(int intvaluetosend) {
@@ -156,5 +141,20 @@ public class MainActivity extends AppCompatActivity {
             textStatus.setText("Unbinding.");
         }
     }
-    //sensor_txt_view.setText(Float.toString(sensorEvent.values[0]));
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    public boolean onCreateOptionsMenu(Menu menu) {
+        return true;
+    }
 }
+

@@ -78,21 +78,22 @@ public class SensorService extends Service implements SensorEventListener {
         }
     }
 
-    private void sendMessageToUI(int sensor_val) {
+    private void sendMessageToUI(float sensor_val) {
             try {
                 // Send data as an int, this will need to be a float but just testing atm with a static value passed as a parameter
+                Log.e(TAG, "sensor_val is: " + sensor_val);
+
                 mClient.send(Message.obtain(null, MSG_SENSOR, sensor_val));
             }
             catch (RemoteException e) {
                 // The client is dead. Remove it from the list; we are going through the list from back to front so this is safe to do inside the loop.
                 Log.i(TAG, "Client is disconnected");
             }
-
     }
 
     @Override
     public IBinder onBind(Intent intent) {
-        Toast.makeText(this, "Service Bound", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Service Binding...", Toast.LENGTH_SHORT).show();
         return mMessenger.getBinder();
     }
 
@@ -121,11 +122,14 @@ public class SensorService extends Service implements SensorEventListener {
     // Within the Service, we can add an AsyncTask and pass it the SensorEvent
     // for handling
 
-    static class SensorEventTask extends AsyncTask<SensorEvent,Float,Float> {
+    protected class SensorEventTask extends AsyncTask<SensorEvent,Float,Float> {
 
         @Override
         protected void onProgressUpdate(Float... progress) {
             Log.i(TAG, Float.toString(progress[0]));
+            if (mClient!=null) {
+                sendMessageToUI(progress[0]);
+            }
         }
 
         @Override
