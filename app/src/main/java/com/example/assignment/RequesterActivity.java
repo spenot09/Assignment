@@ -22,14 +22,15 @@ import android.widget.Toast;
 
 public class RequesterActivity extends AppCompatActivity {
 
-    private Button  acc_button, light_button, unbind_button;
-    private TextView sensor_txt_view, textStatus;
+    private Button  acc_button, light_button, unbind_button, bind_button;
+    private TextView light_textView, acc_textView, textStatus;
 
     Messenger mService = null;
     final Messenger mMessenger = new Messenger(new IncomingHandler());
 
     private boolean bound = false;
 
+    private int sensor_tpye;
     static final int MSG_ACCELEROMETER = 1;
     static final int MSG_LIGHT = 2;
 
@@ -43,21 +44,24 @@ public class RequesterActivity extends AppCompatActivity {
         acc_button = findViewById(R.id.acc_sensor_button);
         light_button = findViewById(R.id.light_sensor_button);
         unbind_button = findViewById(R.id.unbind_button);
+        bind_button = findViewById(R.id.bind_button);
 
-        sensor_txt_view = findViewById(R.id.sensor_txt_view);
+        acc_textView = findViewById(R.id.acc_textView);
+        light_textView = findViewById(R.id.light_textView);
         textStatus = findViewById(R.id.textStatus);
 
         acc_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                doBindService();
+                sensor_tpye = MSG_ACCELEROMETER;
                 sendMessageToService(MSG_ACCELEROMETER);
             }
         });
+
         light_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                doBindService();
+                sensor_tpye = MSG_LIGHT;
                 sendMessageToService(MSG_LIGHT);
             }
         });
@@ -68,6 +72,13 @@ public class RequesterActivity extends AppCompatActivity {
                 doUnbindService();
             }
         });
+
+        bind_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                doBindService();
+            }
+        });
     }
 
     class IncomingHandler extends Handler {
@@ -75,13 +86,13 @@ public class RequesterActivity extends AppCompatActivity {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case SensorService.MSG_SENSOR:
-                    sensor_txt_view.setText("Accelerometer locked in: " + msg.obj);
+                    if (sensor_tpye==MSG_ACCELEROMETER) {
+                        acc_textView.setText(String.format("Accelerometer value: %.1f", msg.obj));
+                    }
+                    if (sensor_tpye==MSG_LIGHT) {
+                        light_textView.setText("Light sensor value: " + msg.obj);
+                    }
                     break;
-                /**
-                 case SensorService.MSG_LIGHT:
-                 sensor_txt_view.setText("Light Sensor locked in: " + msg.arg1);
-                 break;
-                 **/
                 default:
                     super.handleMessage(msg);
             }

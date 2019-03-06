@@ -27,10 +27,9 @@ public class SensorService extends Service implements SensorEventListener {
 
     private static final String TAG = "SensorService";
 
-    private int sensor_type = TYPE_ACCELEROMETER;
+    static final int MSG_SENSOR = 0;
     static final int MSG_ACCELEROMETER = 1;
     static final int MSG_LIGHT = 2;
-    static final int MSG_SENSOR = 0;
     static final int MSG_REGISTER_CLIENT = 3;
 
 
@@ -47,10 +46,8 @@ public class SensorService extends Service implements SensorEventListener {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Toast.makeText(this, "Service Started", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "Service Started", Toast.LENGTH_SHORT).show();
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-        sensor = sensorManager.getDefaultSensor(TYPE_LIGHT);
-        sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL);
 
         return START_STICKY;
     }
@@ -63,14 +60,14 @@ public class SensorService extends Service implements SensorEventListener {
                     mClient=(msg.replyTo);
                     break;
                 case MSG_SENSOR:
+                    sensorManager.unregisterListener(SensorService.this, sensor);
                     if (msg.arg1==MSG_ACCELEROMETER) {
-                        sensor_type = msg.arg1;
-                        Log.e(TAG, "Accelerometer sensor activated: " + sensor_type);
+                        sensor = sensorManager.getDefaultSensor(TYPE_ACCELEROMETER);
                     }
                     if (msg.arg1==MSG_LIGHT) {
-                        sensor_type = msg.arg1;
-                        Log.e(TAG, "Light sensor activated: " + sensor_type);
+                        sensor = sensorManager.getDefaultSensor(TYPE_LIGHT);
                     }
+                    sensorManager.registerListener(SensorService.this, sensor, SensorManager.SENSOR_DELAY_NORMAL);
                     break;
                 default:
                     super.handleMessage(msg);
@@ -82,7 +79,6 @@ public class SensorService extends Service implements SensorEventListener {
             try {
                 // Send data as an int, this will need to be a float but just testing atm with a static value passed as a parameter
                 Log.e(TAG, "sensor_val is: " + sensor_val);
-
                 mClient.send(Message.obtain(null, MSG_SENSOR, sensor_val));
             }
             catch (RemoteException e) {

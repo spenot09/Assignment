@@ -7,10 +7,10 @@
     tools:context=".RequesterActivity">
 
     <TextView
-        android:id="@+id/sensor_txt_view"
+        android:id="@+id/acc_textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="52dp"
+        android:layout_marginEnd="156dp"
         android:text="TextView"
         app:layout_constraintBaseline_toBaselineOf="@+id/textStatus"
         app:layout_constraintEnd_toEndOf="parent" />
@@ -52,5 +52,24 @@
         android:text="Request Light"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:id="@+id/light_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="96dp"
+        android:text="TextView"
+        app:layout_constraintStart_toStartOf="@+id/acc_textView"
+        app:layout_constraintTop_toBottomOf="@+id/acc_textView" />
+
+    <Button
+        android:id="@+id/bind_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="11dp"
+        android:layout_marginBottom="25dp"
+        android:text="Bind"
+        app:layout_constraintBottom_toTopOf="@+id/acc_sensor_button"
+        app:layout_constraintEnd_toStartOf="@+id/acc_sensor_button" />
 
 </android.support.constraint.ConstraintLayout>
