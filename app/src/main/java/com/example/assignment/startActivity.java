@@ -1,5 +1,6 @@
 package com.example.assignment;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ public class startActivity extends AppCompatActivity {
 
     private Button service_button;
     private Button client_button;
+    private Button bluetooth_button;
 
     private TextView welcome_text;
 
@@ -23,8 +25,16 @@ public class startActivity extends AppCompatActivity {
 
         service_button = findViewById(R.id.service_button);
         client_button = findViewById(R.id.client_button);
+        bluetooth_button = findViewById(R.id.bluetooth_button);
 
         welcome_text = findViewById(R.id.welcome_textView);
+
+        bluetooth_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(startActivity.this, BluetoothActivity.class));
+            }
+        });
 
         service_button.setOnClickListener(new View.OnClickListener() {
             @Override
