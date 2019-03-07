@@ -40,6 +40,7 @@ public class ProviderActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_provider);
 
+        //Set up a "Back" button
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         start_service_button = findViewById(R.id.start_service_button);
@@ -50,14 +51,17 @@ public class ProviderActivity extends AppCompatActivity {
 
         gif = findViewById(R.id.gifImageView);
 
+
+        //Remove elements not needed currently on start-up
         sensor_txt.setVisibility(View.INVISIBLE);  // For Invisible/Disappear
         gif.setVisibility(View.INVISIBLE);
 
+        //define fading animations
         final Animation single_out = new AlphaAnimation(1.0f, 0.0f);
         single_out.setDuration(1000);
 
         final AlphaAnimation fadeIn = new AlphaAnimation(0.0f , 1.0f ) ;
-        fadeIn.setDuration(800);
+        fadeIn.setDuration(1000);
 
         final Animation out = new AlphaAnimation(1.0f, 0.0f);
         out.setRepeatCount(Animation.INFINITE);
@@ -67,11 +71,14 @@ public class ProviderActivity extends AppCompatActivity {
         start_service_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //start the service in the background from SensorService
                 startService(new Intent(getBaseContext(), SensorService.class));
 
+                //Sort out the appearance of the View
                 provider_instruction_textView.startAnimation(single_out);
 
                 provider_instruction_textView.setVisibility(View.INVISIBLE);
+                gif.startAnimation(fadeIn);
                 gif.setVisibility(View.VISIBLE);
 
                 sensor_txt.startAnimation(out);
@@ -81,7 +88,10 @@ public class ProviderActivity extends AppCompatActivity {
         stop_service_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //Stop the service by implicitly calling onDestroy()
                 stopService(new Intent(getBaseContext(), SensorService.class));
+
+                //Sort out the appearance of the View
                 sensor_txt.clearAnimation();
                 gif.startAnimation(single_out);
                 gif.setVisibility(View.INVISIBLE);

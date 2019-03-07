@@ -20,10 +20,18 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.anastr.speedviewlib.ImageLinearGauge;
+import com.github.anastr.speedviewlib.PointerSpeedometer;
+import com.github.anastr.speedviewlib.SpeedView;
+
 public class RequesterActivity extends AppCompatActivity {
 
     private Button  acc_button, light_button, unbind_button, bind_button;
     private TextView light_textView, acc_textView, textStatus;
+    private PointerSpeedometer speedometer;
+    private ImageLinearGauge fire_gauge;
+
+
 
     Messenger mService = null;
     final Messenger mMessenger = new Messenger(new IncomingHandler());
@@ -49,6 +57,13 @@ public class RequesterActivity extends AppCompatActivity {
         acc_textView = findViewById(R.id.acc_textView);
         light_textView = findViewById(R.id.light_textView);
         textStatus = findViewById(R.id.textStatus);
+
+        fire_gauge = findViewById(R.id.fireGauge);
+        fire_gauge.speedTo(50);
+
+        speedometer = findViewById(R.id.accGauge);
+
+        speedometer.speedTo(0);
 
         acc_button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,6 +91,9 @@ public class RequesterActivity extends AppCompatActivity {
         bind_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                fire_gauge.speedTo(10);
+                speedometer.speedTo(7);
+
                 doBindService();
             }
         });

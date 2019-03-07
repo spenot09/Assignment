@@ -6,34 +6,73 @@
     android:layout_height="match_parent"
     tools:context=".RequesterActivity">
 
+    <com.github.anastr.speedviewlib.PointerSpeedometer
+        android:id="@+id/accGauge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fireGauge"
+        app:layout_constraintVertical_bias="0.079"
+        app:sv_unit="m/s^2"
+        app:sv_minSpeed="-10"
+        app:sv_maxSpeed="10"
+        app:sv_trembleDegree="0.3"/>
+
+    <com.github.anastr.speedviewlib.ImageLinearGauge
+        android:id="@+id/fireGauge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.071"
+        app:sv_image="@drawable/fire_transparent"
+        app:sv_unit="lux"/>
+
+
     <TextView
         android:id="@+id/acc_textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="156dp"
+        android:layout_marginStart="76dp"
+        android:layout_marginTop="524dp"
         android:text="TextView"
-        app:layout_constraintBaseline_toBaselineOf="@+id/textStatus"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintStart_toEndOf="@+id/textStatus"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/textStatus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="75dp"
-        android:layout_marginTop="330dp"
         android:text="TextView"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintBaseline_toBaselineOf="@+id/acc_textView"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/unbind_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginBottom="24dp"
         android:text="Unbind "
         app:layout_constraintBottom_toTopOf="@+id/acc_sensor_button"
-        app:layout_constraintEnd_toEndOf="@+id/acc_sensor_button" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.764"
+        app:layout_constraintStart_toEndOf="@+id/bind_button" />
 
     <Button
         android:id="@+id/acc_sensor_button"
@@ -57,19 +96,20 @@
         android:id="@+id/light_textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="96dp"
+        android:layout_marginEnd="11dp"
+        android:layout_marginBottom="27dp"
         android:text="TextView"
-        app:layout_constraintStart_toStartOf="@+id/acc_textView"
-        app:layout_constraintTop_toBottomOf="@+id/acc_textView" />
+        app:layout_constraintBottom_toTopOf="@+id/unbind_button"
+        app:layout_constraintEnd_toEndOf="@+id/unbind_button" />
 
     <Button
         android:id="@+id/bind_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="11dp"
-        android:layout_marginBottom="25dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginBottom="112dp"
         android:text="Bind"
-        app:layout_constraintBottom_toTopOf="@+id/acc_sensor_button"
-        app:layout_constraintEnd_toStartOf="@+id/acc_sensor_button" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </android.support.constraint.ConstraintLayout>
