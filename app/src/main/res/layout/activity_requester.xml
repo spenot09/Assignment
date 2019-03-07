@@ -31,35 +31,39 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.071"
         app:sv_image="@drawable/fire_transparent"
-        app:sv_unit="lux"/>
+        app:sv_unit="lux" />
 
 
     <TextView
         android:id="@+id/acc_textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="76dp"
-        android:layout_marginTop="524dp"
+        android:layout_marginStart="72dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
         android:text="TextView"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/textStatus"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/accGauge"
+        app:layout_constraintVertical_bias="0.279" />
 
     <TextView
         android:id="@+id/textStatus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="75dp"
+        android:layout_marginStart="80dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
         android:text="TextView"
-        app:layout_constraintBaseline_toBaselineOf="@+id/acc_textView"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintBottom_toTopOf="@+id/bind_button"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/accGauge"
+        app:layout_constraintVertical_bias="0.701" />
 
     <Button
         android:id="@+id/unbind_button"
@@ -96,11 +100,16 @@
         android:id="@+id/light_textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="11dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="52dp"
         android:layout_marginBottom="27dp"
         android:text="TextView"
         app:layout_constraintBottom_toTopOf="@+id/unbind_button"
-        app:layout_constraintEnd_toEndOf="@+id/unbind_button" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/acc_textView"
+        app:layout_constraintTop_toBottomOf="@+id/accGauge"
+        app:layout_constraintVertical_bias="0.86" />
 
     <Button
         android:id="@+id/bind_button"
