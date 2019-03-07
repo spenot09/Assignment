@@ -1,7 +1,8 @@
 <resources>
     <string name="app_name">Assignment</string>
     <string name="bulleted_list">
-        <li>1. Start the service to allow the client to bind to it and access sensor values</li>\n
-        <li>2. You can stop the service to shutdown the background process (this will also kill \n off the binding from the client)</li>
+        1. Start the service to allow the client to bind to it and access sensor values\n
+        2. You can stop the service to shutdown the background process (this will also kill \n off the binding from the client)
     </string>
+    <string name="title">Welcome!</string>
 </resources>

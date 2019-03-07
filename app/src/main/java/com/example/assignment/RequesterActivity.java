@@ -59,11 +59,11 @@ public class RequesterActivity extends AppCompatActivity {
         textStatus = findViewById(R.id.textStatus);
 
         fire_gauge = findViewById(R.id.fireGauge);
-        fire_gauge.speedTo(50);
 
         speedometer = findViewById(R.id.accGauge);
-
         speedometer.speedTo(0);
+
+
 
         acc_button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -91,9 +91,6 @@ public class RequesterActivity extends AppCompatActivity {
         bind_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                fire_gauge.speedTo(10);
-                speedometer.speedTo(7);
-
                 doBindService();
             }
         });
@@ -106,9 +103,11 @@ public class RequesterActivity extends AppCompatActivity {
                 case SensorService.MSG_SENSOR:
                     if (sensor_tpye==MSG_ACCELEROMETER) {
                         acc_textView.setText(String.format("Accelerometer value: %.1f", msg.obj));
+                        speedometer.speedTo((float)msg.obj, 500);
                     }
                     if (sensor_tpye==MSG_LIGHT) {
                         light_textView.setText("Light sensor value: " + msg.obj);
+                        fire_gauge.speedTo((float)msg.obj, 500);
                     }
                     break;
                 default:
